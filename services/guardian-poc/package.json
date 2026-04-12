@@ -1,0 +1,47 @@
+{
+  "name": "@guardian-demo/guardian-poc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Guardian Layer PoC — constitutional classifier on Bedrock AgentCore",
+  "type": "module",
+  "main": "dist/handler.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/handler.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "typecheck": "tsc --noEmit",
+    "eval": "tsx src/eval/run.ts"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^2.32.0",
+    "@aws-sdk/client-bedrock-agentcore": "^3.1018.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1018.0",
+    "@aws-sdk/client-s3": "^3.1018.0",
+    "yaml": "^2.6.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
+    "@eslint/js": "^9.39.4",
+    "@types/aws-lambda": "^8.10.161",
+    "@types/node": "^24.12.0",
+    "@vitest/coverage-v8": "^4.1.2",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-functional": "^7.1.0",
+    "eslint-plugin-security": "^4.0.0",
+    "eslint-plugin-sonarjs": "^4.0.2",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2",
+    "vitest": "^4.1.2"
+  }
+}

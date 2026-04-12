@@ -1,0 +1,128 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/**'
+      - 'infrastructure/**'
+      - 'guardian/**'
+      - '.github/workflows/deploy-guardian-poc.yml'
+  workflow_dispatch:
+
+env:
+  AWS_REGION: eu-central-1
+  NODE_VERSION: '24'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+permissions:
+  id-token: write # OIDC
+  contents: read
+
+jobs:
+  gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm -r lint
+      - name: Typecheck
+        run: pnpm -r typecheck
+      - name: Test
+        run: pnpm -r test
+      - name: Format check
+        run: pnpm -w run format:check
+      - name: CDK synth
+        working-directory: infrastructure
+        run: npx cdk synth --quiet
+
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: gate
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: GitHubActionsGuardianPocDeploy
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Stage 1: deploy the backend + hosting infra (ChatWebStack creates
+      # the CloudFront distribution, but the bucket is empty for now).
+      # The AuthStack picks up the CloudFront domain for OAuth callbacks,
+      # and the GuardianPocStack picks it up for CORS.
+      - name: CDK deploy backend stacks
+        working-directory: infrastructure
+        run: |
+          npx cdk deploy \
+            GuardianDemoChatWebStack \
+            GuardianDemoAuthStack \
+            GuardianDemoGuardianPocStack \
+            GuardianDemoAgentCoreGatewayStack \
+            --require-approval never
+
+      # Stage 2: read the stack outputs and build the Next.js static site
+      # with those values baked in as NEXT_PUBLIC_* env vars.
+      - name: Fetch stack outputs for frontend build
+        id: outputs
+        run: |
+          USER_POOL_ID=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name GuardianDemoAuthStack --query "Stacks[0].Outputs[?OutputKey=='UserPoolId'].OutputValue" --output text)
+          WEB_CLIENT_ID=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name GuardianDemoAuthStack --query "Stacks[0].Outputs[?OutputKey=='WebClientId'].OutputValue" --output text)
+          COGNITO_DOMAIN=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name GuardianDemoAuthStack --query "Stacks[0].Outputs[?OutputKey=='CognitoDomain'].OutputValue" --output text)
+          API_URL=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name GuardianDemoGuardianPocStack --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
+          CHAT_URL=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name GuardianDemoChatWebStack --query "Stacks[0].Outputs[?OutputKey=='ChatUrl'].OutputValue" --output text)
+          CHAT_BUCKET=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name GuardianDemoChatWebStack --query "Stacks[0].Outputs[?OutputKey=='ChatBucketName'].OutputValue" --output text)
+
+          echo "USER_POOL_ID=$USER_POOL_ID" >> $GITHUB_OUTPUT
+          echo "WEB_CLIENT_ID=$WEB_CLIENT_ID" >> $GITHUB_OUTPUT
+          echo "COGNITO_DOMAIN=$COGNITO_DOMAIN" >> $GITHUB_OUTPUT
+          echo "API_URL=$API_URL" >> $GITHUB_OUTPUT
+          echo "CHAT_URL=$CHAT_URL" >> $GITHUB_OUTPUT
+          echo "CHAT_BUCKET=$CHAT_BUCKET" >> $GITHUB_OUTPUT
+
+      - name: Build chat-web with live Cognito config
+        working-directory: services/chat-web
+        env:
+          NEXT_PUBLIC_COGNITO_REGION: ${{ env.AWS_REGION }}
+          NEXT_PUBLIC_COGNITO_USER_POOL_ID: ${{ steps.outputs.outputs.USER_POOL_ID }}
+          NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ steps.outputs.outputs.WEB_CLIENT_ID }}
+          NEXT_PUBLIC_COGNITO_DOMAIN: ${{ steps.outputs.outputs.COGNITO_DOMAIN }}
+          NEXT_PUBLIC_API_URL: ${{ steps.outputs.outputs.API_URL }}
+          NEXT_PUBLIC_CHAT_URL: ${{ steps.outputs.outputs.CHAT_URL }}
+          NEXT_PUBLIC_SHOW_VERDICT: 'false'
+        run: pnpm build
+
+      # Stage 3: sync the built static export to S3 and invalidate CloudFront
+      - name: Upload chat-web to S3
+        run: |
+          aws s3 sync services/chat-web/out s3://${{ steps.outputs.outputs.CHAT_BUCKET }} --delete
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items==null && Comment=='guardian-demo chat web PoC'].Id | [0]" --output text)
+          if [ "$DISTRIBUTION_ID" != "None" ] && [ -n "$DISTRIBUTION_ID" ]; then
+            aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths '/*'
+          fi
+
+      - name: Stack outputs
+        working-directory: infrastructure
+        run: |
+          echo "## Deployment complete" >> $GITHUB_STEP_SUMMARY
+          echo "Chat URL: ${{ steps.outputs.outputs.CHAT_URL }}" >> $GITHUB_STEP_SUMMARY
+          echo "API URL: ${{ steps.outputs.outputs.API_URL }}" >> $GITHUB_STEP_SUMMARY

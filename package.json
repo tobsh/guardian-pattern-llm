@@ -1,0 +1,45 @@
+{
+  "name": "guardian-demo-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Guardian Pattern Demo — Constitutional Classifier vs. AWS Bedrock Guardrails",
+  "type": "module",
+  "scripts": {
+    "guardian:build": "pnpm --filter @guardian-demo/guardian-poc build",
+    "guardian:dev": "pnpm --filter @guardian-demo/guardian-poc dev",
+    "guardian:test": "pnpm --filter @guardian-demo/guardian-poc test",
+    "guardian:test:coverage": "pnpm --filter @guardian-demo/guardian-poc test:coverage",
+    "guardian:lint": "pnpm --filter @guardian-demo/guardian-poc lint",
+    "guardian:typecheck": "pnpm --filter @guardian-demo/guardian-poc typecheck",
+    "guardian:eval": "pnpm --filter @guardian-demo/guardian-poc eval",
+    "guardrails:build": "pnpm --filter @guardian-demo/bedrock-guardrails-poc build",
+    "guardrails:test": "pnpm --filter @guardian-demo/bedrock-guardrails-poc test",
+    "guardrails:lint": "pnpm --filter @guardian-demo/bedrock-guardrails-poc lint",
+    "guardrails:typecheck": "pnpm --filter @guardian-demo/bedrock-guardrails-poc typecheck",
+    "chat:dev": "pnpm --filter @guardian-demo/chat-web dev",
+    "chat:build": "pnpm --filter @guardian-demo/chat-web build",
+    "chat:test": "pnpm --filter @guardian-demo/chat-web test",
+    "chat:lint": "pnpm --filter @guardian-demo/chat-web lint",
+    "chat:typecheck": "pnpm --filter @guardian-demo/chat-web typecheck",
+    "infra:build": "pnpm --filter guardian-demo-infrastructure build",
+    "infra:test": "pnpm --filter guardian-demo-infrastructure test",
+    "infra:synth": "pnpm --filter guardian-demo-infrastructure synth",
+    "infra:diff": "pnpm --filter guardian-demo-infrastructure diff",
+    "infra:deploy": "pnpm --filter guardian-demo-infrastructure deploy",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "author": "Tobias Hutzler",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
+}
