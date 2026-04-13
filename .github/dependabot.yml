@@ -85,5 +85,6 @@ updates:
         patterns: ['aws-amplify', '@aws-amplify/*']
       tooling:
         patterns: ['*']
-        exclude-patterns: ['next', 'react', 'react-dom', '@types/react*', 'aws-amplify', '@aws-amplify/*']
+        exclude-patterns:
+          ['next', 'react', 'react-dom', '@types/react*', 'aws-amplify', '@aws-amplify/*']
         update-types: [minor, patch]
