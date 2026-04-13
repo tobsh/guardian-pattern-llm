@@ -1,4 +1,5 @@
 import { type BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
+import { z } from 'zod';
 import { GuardianOutput, type GuardianOutput as GuardianOutputT } from './schema.js';
 import { type Constitution, renderSystemPrompt } from './constitution.js';
 import type { TokenUsage } from './cost.js';
@@ -109,7 +110,7 @@ export const classify = async (
   if (!result.success) {
     logger.error('Guardian tool input failed schema validation', {
       input: toolUse.input,
-      errors: result.error.format(),
+      errors: z.treeifyError(result.error),
     });
     // eslint-disable-next-line functional/no-throw-statements -- schema violation, fail closed upstream
     throw new Error('Guardian tool input schema validation failed');
