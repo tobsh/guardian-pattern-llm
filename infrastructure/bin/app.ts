@@ -17,8 +17,8 @@ const env = {
 
 new GitHubOidcStack(app, 'GuardianDemoGitHubOidcStack', {
   env,
-  githubOrg: 'tobsh',
-  githubRepo: 'guardian-demo',
+  githubOrg: process.env.GITHUB_ORG ?? 'tobsh',
+  githubRepo: process.env.GITHUB_REPO ?? 'guardian-pattern-llm',
   allowedBranches: ['main'],
   allowedEnvironments: ['production'],
 });
@@ -70,4 +70,4 @@ gatewayStack.addDependency(guardianStack);
 cdk.Tags.of(app).add('project', 'guardian-demo');
 cdk.Tags.of(app).add('component', 'guardian');
 cdk.Tags.of(app).add('env', 'poc');
-cdk.Tags.of(app).add('owner', 'tobsh');
+cdk.Tags.of(app).add('owner', process.env.OWNER_TAG ?? 'guardian-demo');

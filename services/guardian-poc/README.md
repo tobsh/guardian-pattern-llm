@@ -1,8 +1,6 @@
 # Guardian PoC
 
-Proof-of-concept for the **Guardian Layer** described in [TM-ARCH-003](../../docs/pdf/TM-ARCH-003-guardian-and-persona.pdf). Implements a small constitutional classifier (Haiku 4.5) that gates user input and coach output, with fail-closed fallback behavior.
-
-Tracking issue: [#1](https://github.com/tobsh/guardian-demo/issues/1)
+Proof-of-concept for the **Guardian Pattern** — a constitutional classifier (Haiku 4.5) that gates user input and coach output, with fail-closed fallback behavior.
 
 ## Models (EU-pinned)
 
@@ -26,6 +24,8 @@ User → Lambda → Guardian-In (Haiku) → Coach (Sonnet, stub) → Guardian-Ou
 
 Constitutions live in a versioned S3 bucket (`guardian/constitution.{input,output}.yaml`). Every change goes through PR review → deploy → new S3 object version.
 
+See [docs/constitution.md](../../docs/constitution.md) for the YAML schema.
+
 ## Local dev
 
 ```bash
@@ -47,7 +47,7 @@ CONSTITUTION_BUCKET=guardian-demo-guardian-constitution-<account-id> \
 pnpm guardian:eval
 ```
 
-Emits `eval-report-<timestamp>.json` with attack-catch rate, false-refusal rate, p50 latency per TM-ARCH-003 §1.7 KPIs.
+Emits `eval-report-<timestamp>.json` with attack-catch rate, false-refusal rate, and p50 latency.
 
 ## Deploy
 
@@ -65,8 +65,6 @@ Set `FORCE_FAIL_CLOSED=true` on the Lambda to simulate Guardian-down and verify 
 ## Authentication — the API is private
 
 The `/turn` endpoint is gated by a Cognito JWT authorizer. There is **no public path**. Every request must carry a valid access token from the `GuardianDemoAuthStack` Cognito User Pool, issued to one of the allowed app clients (Web, MCP, CLI).
-
-Tracking issue: [#2](https://github.com/tobsh/guardian-demo/issues/2)
 
 ### Create a test user (one-time)
 

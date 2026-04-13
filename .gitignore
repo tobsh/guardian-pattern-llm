@@ -12,3 +12,35 @@ Desktop.ini
 # Linux
 *~
 .directory
+
+# Node / pnpm
+node_modules/
+.pnpm-store/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
+
+# Next.js
+.next/
+out/
+
+# AWS CDK
+cdk.out/
+cdk.context.json
+
+# Env files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+
+# Drafts — not published with the demo repo
+writing/

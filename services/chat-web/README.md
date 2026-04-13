@@ -2,8 +2,6 @@
 
 Minimal ChatGPT-like chat frontend for the guardian-demo Guardian. Next.js 15 App Router, static export, Cognito Hosted UI, talks to the private Guardian API over HTTPS with a Cognito JWT.
 
-Tracking issue: [#3](https://github.com/tobsh/guardian-demo/issues/3)
-
 ## What it does
 
 - Single chat page — greeting + scrolling message thread + input box
