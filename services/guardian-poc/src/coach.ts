@@ -1,5 +1,6 @@
 import { type BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import type { TokenUsage } from './cost.js';
+import { withRetry } from './retry.js';
 
 export type CoachDeps = {
   readonly bedrock: BedrockRuntimeClient;
@@ -20,13 +21,15 @@ export const callCoach = async (deps: CoachDeps, userMessage: string): Promise<C
     messages: [{ role: 'user', content: userMessage }],
   };
 
-  const response = await deps.bedrock.send(
-    new InvokeModelCommand({
-      modelId: deps.modelId,
-      contentType: 'application/json',
-      accept: 'application/json',
-      body: JSON.stringify(body),
-    })
+  const response = await withRetry('coach', () =>
+    deps.bedrock.send(
+      new InvokeModelCommand({
+        modelId: deps.modelId,
+        contentType: 'application/json',
+        accept: 'application/json',
+        body: JSON.stringify(body),
+      })
+    )
   );
   const parsed = JSON.parse(new TextDecoder().decode(response.body)) as {
     readonly content: readonly { readonly text: string }[];

@@ -330,24 +330,36 @@ const main = async (): Promise<void> => {
     'no-guardrails': `${settings.apiUrl}/turn-no-guardrails`,
   };
 
+  const concurrency = Number(process.env.EVAL_CONCURRENCY ?? '6');
   console.log(
-    `\nRunning ${String(EVAL_CASES.length * 3)} requests (${String(EVAL_CASES.length)} cases × 3 approaches)...\n`
+    `\nRunning ${String(EVAL_CASES.length * 3)} requests (${String(EVAL_CASES.length)} cases × 3 approaches) at concurrency ${String(concurrency)}...\n`
   );
 
-  const tasks: Promise<CallResult>[] = [];
+  type Job = { readonly approach: Approach; readonly url: string; readonly c: EvalCase };
+  const jobs: Job[] = [];
   for (const c of EVAL_CASES) {
     for (const approach of ['no-guardrails', 'bedrock-guardrails', 'guardian'] as const) {
-      tasks.push(runOne(approach, endpoints[approach], token, c));
+      jobs.push({ approach, url: endpoints[approach], c });
     }
   }
-  const results = await Promise.all(tasks);
 
-  for (const r of results) {
-    const ok = r.error === null ? '✓' : '✗';
-    console.log(
-      `${ok} [${r.approach}] ${r.caseId} (${r.category}) → ${r.actual} (${String(r.latencyMs)}ms, $${r.costUsd.toFixed(5)})`
-    );
-  }
+  const results: CallResult[] = [];
+  let cursor = 0;
+  const worker = async (): Promise<void> => {
+    while (cursor < jobs.length) {
+      const idx = cursor;
+      cursor += 1;
+      const job = jobs[idx];
+      if (!job) return;
+      const result = await runOne(job.approach, job.url, token, job.c);
+      results.push(result);
+      const ok = result.error === null ? '✓' : '✗';
+      console.log(
+        `${ok} [${result.approach}] ${result.caseId} (${result.category}) → ${result.actual} (${String(result.latencyMs)}ms, $${result.costUsd.toFixed(5)})`
+      );
+    }
+  };
+  await Promise.all(Array.from({ length: concurrency }, () => worker()));
 
   const summary = summarize(results);
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');

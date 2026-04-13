@@ -4,6 +4,7 @@ import { GuardianOutput, type GuardianOutput as GuardianOutputT } from './schema
 import { type Constitution, renderSystemPrompt } from './constitution.js';
 import type { TokenUsage } from './cost.js';
 import { logger } from './logger.js';
+import { withRetry } from './retry.js';
 
 export type GuardianDeps = {
   readonly bedrock: BedrockRuntimeClient;
@@ -88,7 +89,7 @@ export const classify = async (
     body: JSON.stringify(body),
   });
 
-  const response = await deps.bedrock.send(command);
+  const response = await withRetry(`guardian:${input.phase}`, () => deps.bedrock.send(command));
   const raw = new TextDecoder().decode(response.body);
   const parsed = JSON.parse(raw) as BedrockResponse;
 
