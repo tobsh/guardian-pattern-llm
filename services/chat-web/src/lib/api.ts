@@ -44,7 +44,7 @@ export type TurnResponse = {
 
 export type GuardrailTrace = {
   inputAssessment: Record<string, unknown> | null;
-  outputAssessment: Record<string, unknown> | null;
+  outputAssessments: Record<string, unknown> | null;
 };
 
 export type BedrockGuardrailsTurnResponse = {

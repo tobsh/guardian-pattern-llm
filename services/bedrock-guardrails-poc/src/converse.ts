@@ -1,7 +1,7 @@
 import {
-  BedrockRuntimeClient,
+  type BedrockRuntimeClient,
   ConverseCommand,
-  type GuardrailTrace,
+  type GuardrailAssessment as SdkGuardrailAssessment,
   type Message as BedrockMessage,
   type ContentBlock,
 } from '@aws-sdk/client-bedrock-runtime';
@@ -14,15 +14,15 @@ export type ConverseDeps = {
   readonly guardrailVersion: string;
 };
 
-export type GuardrailAssessment = {
+export type GuardrailAssessmentSummary = {
   readonly action: 'NONE' | 'GUARDRAIL_INTERVENED';
-  readonly inputAssessment: GuardrailTrace | null;
-  readonly outputAssessment: GuardrailTrace | null;
+  readonly inputAssessment: Record<string, SdkGuardrailAssessment> | null;
+  readonly outputAssessments: Record<string, SdkGuardrailAssessment[]> | null;
 };
 
 export type ConverseResult = {
   readonly text: string;
-  readonly guardrail: GuardrailAssessment;
+  readonly guardrail: GuardrailAssessmentSummary;
   readonly inputTokens: number;
   readonly outputTokens: number;
 };
@@ -67,16 +67,15 @@ export const converseWithGuardrails = async (
   const stopReason = response.stopReason ?? 'end_turn';
   const guardrailIntervened = stopReason === 'guardrail_intervened';
 
-  // Extract guardrail trace from the response
   const trace = response.trace?.guardrail;
   const inputAssessment = trace?.inputAssessment ?? null;
-  const outputAssessment = trace?.outputAssessment ?? null;
+  const outputAssessments = trace?.outputAssessments ?? null;
 
   logger.info('Converse call complete', {
     stopReason,
     guardrailIntervened,
     hasInputAssessment: inputAssessment !== null,
-    hasOutputAssessment: outputAssessment !== null,
+    hasOutputAssessments: outputAssessments !== null,
   });
 
   return {
@@ -86,8 +85,8 @@ export const converseWithGuardrails = async (
       : outputText,
     guardrail: {
       action: guardrailIntervened ? 'GUARDRAIL_INTERVENED' : 'NONE',
-      inputAssessment: inputAssessment as GuardrailTrace | null,
-      outputAssessment: outputAssessment as GuardrailTrace | null,
+      inputAssessment,
+      outputAssessments,
     },
     inputTokens: response.usage?.inputTokens ?? 0,
     outputTokens: response.usage?.outputTokens ?? 0,

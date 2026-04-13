@@ -15,7 +15,6 @@ export const loadConfig = (): GuardrailsConfig => ({
 const requireEnv = (key: string): string => {
   const value = process.env[key];
   if (value === undefined || value === '') {
-    // eslint-disable-next-line functional/no-throw-statements
     throw new Error(`Missing required env var: ${key}`);
   }
   return value;
