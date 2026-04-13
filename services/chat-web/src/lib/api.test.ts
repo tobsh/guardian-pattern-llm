@@ -20,7 +20,8 @@ vi.mock('./config', () => ({
   },
 }));
 
-const { sendTurn, UnauthenticatedError } = await import('./api');
+const { sendTurn, sendTurnBedrockGuardrails, sendTurnNoGuardrails, UnauthenticatedError } =
+  await import('./api');
 
 describe('sendTurn', () => {
   beforeEach(() => {
@@ -87,6 +88,58 @@ describe('sendTurn', () => {
       ok: false,
       status: 500,
     });
-    await expect(sendTurn('hi')).rejects.toThrow('Guardian API error: 500');
+    await expect(sendTurn('hi')).rejects.toThrow('API error: 500');
+  });
+});
+
+describe('comparison endpoints', () => {
+  beforeEach(() => {
+    fetchAuthSessionMock.mockReset();
+    fetchAuthSessionMock.mockResolvedValue({
+      tokens: { accessToken: { toString: () => 'tok' } },
+    });
+    vi.stubGlobal('fetch', vi.fn());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('sendTurnBedrockGuardrails posts to /turn-bedrock-guardrails', async () => {
+    (globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        response: 'blocked',
+        guardrailAction: 'GUARDRAIL_INTERVENED',
+        guardrailTrace: { inputAssessment: null, outputAssessments: null },
+        failedClosed: false,
+        cost: { totalUsd: 0, inputTokens: 10, outputTokens: 0, breakdown: [] },
+      }),
+    });
+    const result = await sendTurnBedrockGuardrails('Aktientipp?');
+    expect(result.guardrailAction).toBe('GUARDRAIL_INTERVENED');
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'https://api.test.local/turn-bedrock-guardrails',
+      expect.anything()
+    );
+  });
+
+  it('sendTurnNoGuardrails posts to /turn-no-guardrails', async () => {
+    (globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        response: 'hier ist deine Antwort',
+        failedClosed: false,
+        cost: { totalUsd: 0, inputTokens: 20, outputTokens: 40, breakdown: [] },
+      }),
+    });
+    const result = await sendTurnNoGuardrails('Hallo');
+    expect(result.response).toBe('hier ist deine Antwort');
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'https://api.test.local/turn-no-guardrails',
+      expect.anything()
+    );
   });
 });

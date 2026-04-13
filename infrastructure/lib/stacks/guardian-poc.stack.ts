@@ -369,6 +369,58 @@ export class GuardianPocStack extends cdk.Stack {
       authorizer: jwtAuthorizer,
     });
 
+    // --- No-guardrails baseline (raw Sonnet, no safety layer) ---
+
+    const noGuardrailsLogGroup = new logs.LogGroup(this, 'NoGuardrailsLogGroup', {
+      retention: logs.RetentionDays.ONE_WEEK,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+
+    const noGuardrailsFn = new nodejs.NodejsFunction(this, 'NoGuardrailsFn', {
+      entry: path.join(__dirname, '../../../services/no-guardrails-poc/src/handler.ts'),
+      handler: 'handler',
+      runtime: lambda.Runtime.NODEJS_24_X,
+      architecture: lambda.Architecture.ARM_64,
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(30),
+      logGroup: noGuardrailsLogGroup,
+      environment: {
+        AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+        COACH_MODEL_ID: props.coachModelId,
+        LOG_LEVEL: 'INFO',
+      },
+      bundling: {
+        format: nodejs.OutputFormat.ESM,
+        target: 'node24',
+        externalModules: ['@aws-sdk/*'],
+        banner:
+          "import { createRequire as topLevelCreateRequire } from 'node:module'; const require = topLevelCreateRequire(import.meta.url);",
+      },
+    });
+
+    noGuardrailsFn.addToRolePolicy(
+      new iam.PolicyStatement({
+        sid: 'InvokeBedrockConverseNoGuardrails',
+        effect: iam.Effect.ALLOW,
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          `arn:aws:bedrock:*::foundation-model/${coachModelBase}`,
+          `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/${props.coachModelId}`,
+        ],
+      })
+    );
+
+    this.api.addRoutes({
+      path: '/turn-no-guardrails',
+      methods: [apigwv2.HttpMethod.POST],
+      integration: new apigwv2int.HttpLambdaIntegration('NoGuardrailsInt', noGuardrailsFn),
+      authorizer: jwtAuthorizer,
+    });
+
+    new cdk.CfnOutput(this, 'NoGuardrailsFunctionName', {
+      value: noGuardrailsFn.functionName,
+    });
+
     new cdk.CfnOutput(this, 'GuardrailId', {
       value: guardrail.attrGuardrailId,
       description: 'Bedrock Guardrail ID for the comparison endpoint',

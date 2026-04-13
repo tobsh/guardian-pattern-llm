@@ -4,14 +4,16 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 import {
   sendTurn,
   sendTurnBedrockGuardrails,
+  sendTurnNoGuardrails,
   UnauthenticatedError,
   type TurnResponse,
   type BedrockGuardrailsTurnResponse,
+  type NoGuardrailsTurnResponse,
 } from '@/lib/api';
 import { MessageBubble, formatUsd, type Message } from './MessageBubble';
 import { signInWithRedirect } from 'aws-amplify/auth';
 
-export type ChatPanelMode = 'guardian' | 'bedrock-guardrails';
+export type ChatPanelMode = 'guardian' | 'bedrock-guardrails' | 'no-guardrails';
 
 export type ChatPanelHandle = {
   sendMessage: (text: string) => Promise<void>;
@@ -65,7 +67,7 @@ export const ChatPanel = forwardRef<ChatPanelHandle, Props>(function ChatPanel(
           verdict: result.outputVerdict ?? result.inputVerdict,
           cost: result.cost,
         };
-      } else {
+      } else if (mode === 'bedrock-guardrails') {
         const result: BedrockGuardrailsTurnResponse = await sendTurnBedrockGuardrails(text);
         assistantMsg = {
           id: crypto.randomUUID(),
@@ -74,6 +76,16 @@ export const ChatPanel = forwardRef<ChatPanelHandle, Props>(function ChatPanel(
             ? 'Ich bin gerade kurz nicht verfügbar, bitte versuche es in einem Moment erneut.'
             : result.response,
           guardrailAction: result.guardrailAction,
+          cost: result.cost,
+        };
+      } else {
+        const result: NoGuardrailsTurnResponse = await sendTurnNoGuardrails(text);
+        assistantMsg = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          text: result.failedClosed
+            ? 'Ich bin gerade kurz nicht verfügbar, bitte versuche es in einem Moment erneut.'
+            : result.response,
           cost: result.cost,
         };
       }
@@ -105,7 +117,7 @@ export const ChatPanel = forwardRef<ChatPanelHandle, Props>(function ChatPanel(
   }));
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex min-h-0 h-full flex-col">
       <div className="border-b border-neutral-200 px-4 py-3">
         <div className="text-sm font-semibold">{title}</div>
         <div className="flex items-center justify-between">

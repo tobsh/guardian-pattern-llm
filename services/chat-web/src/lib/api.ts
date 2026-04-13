@@ -105,3 +105,21 @@ export async function sendTurnBedrockGuardrails(
   const response = await authFetch('/turn-bedrock-guardrails', message);
   return (await response.json()) as BedrockGuardrailsTurnResponse;
 }
+
+// --- No-guardrails types ---
+
+export type NoGuardrailsTurnResponse = {
+  response: string;
+  failedClosed: boolean;
+  cost: TurnCost;
+};
+
+/**
+ * No-guardrails endpoint — POST /turn-no-guardrails
+ */
+export async function sendTurnNoGuardrails(
+  message: string
+): Promise<NoGuardrailsTurnResponse> {
+  const response = await authFetch('/turn-no-guardrails', message);
+  return (await response.json()) as NoGuardrailsTurnResponse;
+}

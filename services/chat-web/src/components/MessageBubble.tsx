@@ -19,7 +19,7 @@ export type Message = {
 type Props = {
   message: Message;
   showVerdict?: boolean;
-  variant?: 'guardian' | 'bedrock-guardrails';
+  variant?: 'guardian' | 'bedrock-guardrails' | 'no-guardrails';
 };
 
 export const formatUsd = (usd: number): string => `$${usd.toFixed(4)}`;
@@ -90,6 +90,11 @@ export function MessageBubble({
             >
               {message.guardrailAction === 'GUARDRAIL_INTERVENED' ? 'BLOCKED' : 'PASSED'}
             </span>
+          </div>
+        )}
+        {showVerdict && !isUser && variant === 'no-guardrails' && (
+          <div className="mt-1 text-xs">
+            <span className="font-mono font-medium text-neutral-400">UNGUARDED</span>
           </div>
         )}
       </div>

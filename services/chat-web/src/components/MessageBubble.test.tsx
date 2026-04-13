@@ -41,16 +41,47 @@ describe('<MessageBubble />', () => {
 
   it('shows the verdict panel only when showVerdict=true and role=assistant', () => {
     const { rerender } = render(<MessageBubble message={assistantMessage} showVerdict={false} />);
-    expect(screen.queryByText(/verdict:/)).not.toBeInTheDocument();
+    expect(screen.queryByText('pass')).not.toBeInTheDocument();
 
     rerender(<MessageBubble message={assistantMessage} showVerdict={true} />);
-    expect(screen.getByText(/verdict: pass/)).toBeInTheDocument();
+    expect(screen.getByText('pass')).toBeInTheDocument();
     expect(screen.getByText(/budgetplanung/)).toBeInTheDocument();
   });
 
   it('does not render verdict panel for user messages even with showVerdict', () => {
     render(<MessageBubble message={userMessage} showVerdict={true} />);
-    expect(screen.queryByText(/verdict:/)).not.toBeInTheDocument();
+    expect(screen.queryByText('pass')).not.toBeInTheDocument();
+  });
+
+  it('renders BLOCKED badge for bedrock-guardrails variant when guardrail intervened', () => {
+    const blocked: Message = {
+      ...assistantMessage,
+      verdict: null,
+      guardrailAction: 'GUARDRAIL_INTERVENED',
+    };
+    render(<MessageBubble message={blocked} showVerdict variant="bedrock-guardrails" />);
+    expect(screen.getByText('BLOCKED')).toBeInTheDocument();
+  });
+
+  it('renders PASSED badge for bedrock-guardrails variant when guardrail did not intervene', () => {
+    const passed: Message = {
+      ...assistantMessage,
+      verdict: null,
+      guardrailAction: 'NONE',
+    };
+    render(<MessageBubble message={passed} showVerdict variant="bedrock-guardrails" />);
+    expect(screen.getByText('PASSED')).toBeInTheDocument();
+  });
+
+  it('renders UNGUARDED badge for no-guardrails variant', () => {
+    render(
+      <MessageBubble
+        message={{ ...assistantMessage, verdict: null }}
+        showVerdict
+        variant="no-guardrails"
+      />
+    );
+    expect(screen.getByText('UNGUARDED')).toBeInTheDocument();
   });
 
   it('renders cost + token breakdown on assistant messages', () => {

@@ -14,6 +14,7 @@ export function ComparisonView(): React.JSX.Element {
 
   const guardianRef = useRef<ChatPanelHandle>(null);
   const guardrailsRef = useRef<ChatPanelHandle>(null);
+  const noGuardrailsRef = useRef<ChatPanelHandle>(null);
 
   useEffect(() => {
     ensureAmplifyConfigured();
@@ -35,10 +36,11 @@ export function ComparisonView(): React.JSX.Element {
     setInput('');
     setBusy(true);
 
-    // Fire both panels in parallel
+    // Fire all panels in parallel
     await Promise.allSettled([
       guardianRef.current?.sendMessage(text),
       guardrailsRef.current?.sendMessage(text),
+      noGuardrailsRef.current?.sendMessage(text),
     ]);
 
     setBusy(false);
@@ -64,7 +66,7 @@ export function ComparisonView(): React.JSX.Element {
         <div>
           <div className="text-lg font-semibold">Guardian Pattern — Vergleich</div>
           <div className="text-xs text-neutral-400">
-            Gleiche Nachricht, zwei Guardrail-Ansätze
+            Gleiche Nachricht, drei Ansätze im Vergleich
           </div>
         </div>
         <button
@@ -75,19 +77,25 @@ export function ComparisonView(): React.JSX.Element {
         </button>
       </header>
 
-      {/* Split panels */}
-      <div className="grid flex-1 grid-cols-1 divide-x divide-neutral-200 overflow-hidden md:grid-cols-2">
+      {/* Triple panels */}
+      <div className="grid flex-1 grid-cols-1 divide-x divide-neutral-200 overflow-hidden md:grid-cols-3">
         <ChatPanel
-          ref={guardianRef}
-          mode="guardian"
-          title="Guardian Pattern"
-          subtitle="Eigener Constitutional Classifier (Haiku + Sonnet)"
+          ref={noGuardrailsRef}
+          mode="no-guardrails"
+          title="Ohne Guardrails"
+          subtitle="Sonnet 4.6 ohne Schutzschicht"
         />
         <ChatPanel
           ref={guardrailsRef}
           mode="bedrock-guardrails"
           title="AWS Bedrock Guardrails"
           subtitle="Native Guardrails via Converse API"
+        />
+        <ChatPanel
+          ref={guardianRef}
+          mode="guardian"
+          title="Guardian Pattern"
+          subtitle="Constitutional Classifier (Haiku + Sonnet)"
         />
       </div>
 
@@ -104,7 +112,7 @@ export function ComparisonView(): React.JSX.Element {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Nachricht an beide Chatbots…"
+            placeholder="Nachricht an alle drei Chatbots…"
             disabled={busy}
             className="flex-1 rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm focus:border-[var(--accent)] focus:outline-none disabled:opacity-50"
           />

@@ -2,6 +2,9 @@
 
 ## 2026-04-13
 
+### Fixes
+- use outputAssessments plural + add tests (2be858c)
+
 ### Chores
 - polish repo for open source (1cb9fd4)
 
