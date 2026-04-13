@@ -9,7 +9,9 @@ const base: Constitution = {
     { name: 'budgetplanung', description: 'Monatsbudget, Ausgaben-Tracking' },
     { name: 'sparen', description: 'Notgroschen, Strategien' },
   ],
-  forbidden_categories: [{ name: 'anlageberatung', description: 'Konkrete Kauf-/Verkaufsempfehlungen' }],
+  forbidden_categories: [
+    { name: 'anlageberatung', description: 'Konkrete Kauf-/Verkaufsempfehlungen' },
+  ],
   red_flags: ['Spielsucht', 'Suizid'],
   routing_rules: 'pass allowed, refuse forbidden, escalate red flags',
 };

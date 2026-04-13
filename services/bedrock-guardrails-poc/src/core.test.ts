@@ -52,10 +52,9 @@ describe('processTurn', () => {
       stopReason: 'end_turn',
       usage: { inputTokens: 10, outputTokens: 20 },
     });
-    const result = await processTurn(
-      makeDeps({ bedrock }),
-      { body: JSON.stringify({ message: 'Budget?' }) }
-    );
+    const result = await processTurn(makeDeps({ bedrock }), {
+      body: JSON.stringify({ message: 'Budget?' }),
+    });
     expect(result.statusCode).toBe(200);
     const body = JSON.parse(result.body);
     expect(body.response).toBe('Hier ist dein Plan.');
@@ -72,10 +71,9 @@ describe('processTurn', () => {
       stopReason: 'guardrail_intervened',
       usage: { inputTokens: 5, outputTokens: 0 },
     });
-    const result = await processTurn(
-      makeDeps({ bedrock }),
-      { body: JSON.stringify({ message: 'Aktientipp?' }) }
-    );
+    const result = await processTurn(makeDeps({ bedrock }), {
+      body: JSON.stringify({ message: 'Aktientipp?' }),
+    });
     const body = JSON.parse(result.body);
     expect(body.guardrailAction).toBe('GUARDRAIL_INTERVENED');
     expect(body.response).toContain('Finanzberater');
@@ -85,10 +83,9 @@ describe('processTurn', () => {
     const bedrock = {
       send: vi.fn().mockRejectedValue(new Error('boom')),
     } as unknown as ConverseDeps['bedrock'];
-    const result = await processTurn(
-      makeDeps({ bedrock }),
-      { body: JSON.stringify({ message: 'hi' }) }
-    );
+    const result = await processTurn(makeDeps({ bedrock }), {
+      body: JSON.stringify({ message: 'hi' }),
+    });
     expect(result.statusCode).toBe(200);
     const body = JSON.parse(result.body);
     expect(body.failedClosed).toBe(true);

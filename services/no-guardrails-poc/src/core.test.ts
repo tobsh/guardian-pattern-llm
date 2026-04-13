@@ -42,10 +42,9 @@ describe('processTurn', () => {
       stopReason: 'end_turn',
       usage: { inputTokens: 12, outputTokens: 34 },
     });
-    const result = await processTurn(
-      makeDeps({ bedrock }),
-      { body: JSON.stringify({ message: 'hi' }) }
-    );
+    const result = await processTurn(makeDeps({ bedrock }), {
+      body: JSON.stringify({ message: 'hi' }),
+    });
     expect(result.statusCode).toBe(200);
     const body = JSON.parse(result.body);
     expect(body.response).toBe('Hier ist dein Plan.');
@@ -59,10 +58,9 @@ describe('processTurn', () => {
     const bedrock = {
       send: vi.fn().mockRejectedValue(new Error('boom')),
     } as unknown as ConverseDeps['bedrock'];
-    const result = await processTurn(
-      makeDeps({ bedrock }),
-      { body: JSON.stringify({ message: 'hi' }) }
-    );
+    const result = await processTurn(makeDeps({ bedrock }), {
+      body: JSON.stringify({ message: 'hi' }),
+    });
     const body = JSON.parse(result.body);
     expect(body.failedClosed).toBe(true);
     expect(body.response).toContain('nicht verfügbar');

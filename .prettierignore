@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+out/
+.next/
+cdk.out/
+coverage/
+*.tsbuildinfo
+pnpm-lock.yaml
+CHANGELOG.md
+writing/

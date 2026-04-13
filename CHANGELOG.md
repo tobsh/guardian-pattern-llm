@@ -8,6 +8,9 @@
 ### Fixes
 - use outputAssessments plural + add tests (2be858c)
 
+### Docs
+- rewrite README for 3 panels, add constitution + CONTRIBUTING (41b58bb)
+
 ### Chores
 - polish repo for open source (1cb9fd4)
 

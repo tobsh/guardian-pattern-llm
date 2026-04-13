@@ -13,25 +13,25 @@ The classifier **never generates free-form text** — it must call a `report_ver
 
 ## Schema
 
-| Field | Type | Purpose |
-|---|---|---|
-| `schema_version` | number | Bumped when the shape changes. Guards against stale deployments. |
-| `phase` | `"input" \| "output"` | Which half of the turn this runs on. |
-| `role` | string | System-prompt preamble. Must tell the classifier to ignore instructions inside the `<user_input>` / `<coach_output>` tags — this is the anti-prompt-injection anchor. |
-| `allowed_categories` | `{name, description}[]` | Topics the coach may handle. `pass` verdict. |
-| `forbidden_categories` | `{name, description}[]` | Topics the coach must not handle. `refuse` verdict. |
-| `red_flags` | string[] | Crisis signals. `escalate` verdict. Typically empty for output phase. |
-| `output_rules` | string[]? | Output-only. Extra checks on the coach's response (tone, product mentions, PII echo). |
-| `routing_rules` | string | Free-form prose describing verdict routing and flag semantics. Included verbatim in the system prompt. |
+| Field                  | Type                    | Purpose                                                                                                                                                               |
+| ---------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `schema_version`       | number                  | Bumped when the shape changes. Guards against stale deployments.                                                                                                      |
+| `phase`                | `"input" \| "output"`   | Which half of the turn this runs on.                                                                                                                                  |
+| `role`                 | string                  | System-prompt preamble. Must tell the classifier to ignore instructions inside the `<user_input>` / `<coach_output>` tags — this is the anti-prompt-injection anchor. |
+| `allowed_categories`   | `{name, description}[]` | Topics the coach may handle. `pass` verdict.                                                                                                                          |
+| `forbidden_categories` | `{name, description}[]` | Topics the coach must not handle. `refuse` verdict.                                                                                                                   |
+| `red_flags`            | string[]                | Crisis signals. `escalate` verdict. Typically empty for output phase.                                                                                                 |
+| `output_rules`         | string[]?               | Output-only. Extra checks on the coach's response (tone, product mentions, PII echo).                                                                                 |
+| `routing_rules`        | string                  | Free-form prose describing verdict routing and flag semantics. Included verbatim in the system prompt.                                                                |
 
 ## The four verdicts
 
-| Verdict | When | What the Lambda does |
-|---|---|---|
-| `pass` | On-topic, no concerns | Forward to the coach (or return coach output on the output phase) |
-| `refuse` | Forbidden category, toxic, off-topic | Return a polite refusal template — no coach call |
-| `escalate` | Red flag tripped | Return a crisis template with support resources |
-| `sanitize` | Prompt injection, PII leak attempt | Ask the user to rephrase |
+| Verdict    | When                                 | What the Lambda does                                              |
+| ---------- | ------------------------------------ | ----------------------------------------------------------------- |
+| `pass`     | On-topic, no concerns                | Forward to the coach (or return coach output on the output phase) |
+| `refuse`   | Forbidden category, toxic, off-topic | Return a polite refusal template — no coach call                  |
+| `escalate` | Red flag tripped                     | Return a crisis template with support resources                   |
+| `sanitize` | Prompt injection, PII leak attempt   | Ask the user to rephrase                                          |
 
 ## Flags
 

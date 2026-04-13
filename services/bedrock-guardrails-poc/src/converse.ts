@@ -80,8 +80,8 @@ export const converseWithGuardrails = async (
 
   return {
     text: guardrailIntervened
-      ? (outputText ||
-        'Darüber kann ich dir leider keine Auskunft geben. Für diese Frage wende dich bitte an einen zugelassenen Finanzberater.')
+      ? outputText ||
+        'Darüber kann ich dir leider keine Auskunft geben. Für diese Frage wende dich bitte an einen zugelassenen Finanzberater.'
       : outputText,
     guardrail: {
       action: guardrailIntervened ? 'GUARDRAIL_INTERVENED' : 'NONE',

@@ -117,9 +117,7 @@ export type NoGuardrailsTurnResponse = {
 /**
  * No-guardrails endpoint — POST /turn-no-guardrails
  */
-export async function sendTurnNoGuardrails(
-  message: string
-): Promise<NoGuardrailsTurnResponse> {
+export async function sendTurnNoGuardrails(message: string): Promise<NoGuardrailsTurnResponse> {
   const response = await authFetch('/turn-no-guardrails', message);
   return (await response.json()) as NoGuardrailsTurnResponse;
 }
