@@ -2,6 +2,9 @@
 
 ## 2026-04-13
 
+### Features
+- add no-guardrails baseline panel + 3-column comparison UI (c7d814e)
+
 ### Fixes
 - use outputAssessments plural + add tests (2be858c)
 
