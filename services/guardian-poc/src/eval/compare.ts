@@ -313,6 +313,47 @@ const renderMarkdown = (
       r ? `${r.actual} / ${fmtCost(r.costUsd)} / ${String(r.latencyMs)}ms` : '—';
     lines.push(`| ${caseId} | ${cat} | ${exp} | ${cell(ng)} | ${cell(bg)} | ${cell(gp)} |`);
   }
+
+  lines.push('');
+  lines.push('## Full responses per case');
+  lines.push('');
+  lines.push(
+    'Each case shows the user prompt followed by the verbatim response from each approach. Long responses are truncated to 1500 chars.'
+  );
+  lines.push('');
+  const truncate = (s: string, max = 1500): string =>
+    s.length > max ? `${s.slice(0, max)}\n\n_…truncated (${String(s.length)} chars total)_` : s;
+  for (const [caseId, items] of byCase) {
+    const prompt = EVAL_CASES.find((c) => c.id === caseId)?.message ?? '';
+    const exp = items[0]?.expected ?? '';
+    lines.push(`### \`${caseId}\` — expected: \`${exp}\``);
+    lines.push('');
+    lines.push('**Prompt:**');
+    lines.push('');
+    lines.push(`> ${prompt}`);
+    lines.push('');
+    for (const approach of ['no-guardrails', 'bedrock-guardrails', 'guardian'] as const) {
+      const r = items.find((i) => i.approach === approach);
+      if (!r) continue;
+      lines.push(
+        `**${approach}** → \`${r.actual}\` · ${fmtCost(r.costUsd)} · ${String(r.latencyMs)}ms`
+      );
+      lines.push('');
+      if (r.error !== null) {
+        lines.push(`> ⚠️ error: ${r.error}`);
+      } else if (r.response.length > 0) {
+        lines.push('```');
+        lines.push(truncate(r.response));
+        lines.push('```');
+      } else {
+        lines.push('_(empty response)_');
+      }
+      lines.push('');
+    }
+    lines.push('---');
+    lines.push('');
+  }
+
   return lines.join('\n');
 };
 

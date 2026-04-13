@@ -16,6 +16,9 @@
 ### Style
 - format dependabot.yml (7f9fd4d)
 
+### Tests
+- add slippery-slope fitness-as-budget case (0bbe1ca)
+
 ### Chores
 - add dependabot config and security policy (93ff0a9)
 - apply prettier formatting + ignore lockfile/changelog (0a53995)
