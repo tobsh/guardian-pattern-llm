@@ -581,6 +581,15 @@ The comparison eval auto-discovers `API_URL`, `COGNITO_USER_POOL_ID`, and
 `COGNITO_CLI_CLIENT_ID` from CloudFormation outputs — you only need the
 Cognito credentials. Total cost: ~$0.10 per full run (17 cases × 3 approaches).
 
+The generated markdown contains summary tables (cost, p50/p95 latency,
+verdict accuracy) plus the verbatim response from each approach for
+every case. **A snapshot from a real run is checked in:**
+
+📄 [`reports/eval-comparison-2026-04-13.pdf`](./reports/eval-comparison-2026-04-13.pdf)
+
+See [`reports/README.md`](./reports/README.md) for how the reports are
+generated and how to convert markdown → PDF locally.
+
 ---
 
 ## Available Scripts

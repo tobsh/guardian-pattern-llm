@@ -42,11 +42,12 @@ cdk.context.json
 .vscode/
 .idea/
 
-# Eval reports (generated locally, not checked in)
+# Eval reports (generated locally, not checked in — but reports/ is tracked)
 eval-report-*.json
 eval-comparison-*.json
 eval-comparison-*.md
 eval-comparison-*.pdf
+!reports/**
 
 # Drafts — not published with the demo repo
 writing/

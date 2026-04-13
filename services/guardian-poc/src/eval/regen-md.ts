@@ -56,9 +56,7 @@ const main = (): void => {
   lines.push('');
   lines.push('## Summary per approach');
   lines.push('');
-  lines.push(
-    '| Approach | Cases | Errors | Total cost | Avg cost | p50 latency | p95 latency |'
-  );
+  lines.push('| Approach | Cases | Errors | Total cost | Avg cost | p50 latency | p95 latency |');
   lines.push('|---|---:|---:|---:|---:|---:|---:|');
   for (const approach of ['no-guardrails', 'bedrock-guardrails', 'guardian'] as const) {
     const s = report.summary[approach] as {
@@ -76,9 +74,7 @@ const main = (): void => {
   lines.push('');
   lines.push('## Per-case results');
   lines.push('');
-  lines.push(
-    '| Case | Category | Expected | No-Guardrails | Bedrock | Guardian |'
-  );
+  lines.push('| Case | Category | Expected | No-Guardrails | Bedrock | Guardian |');
   lines.push('|---|---|---|---|---|---|');
   for (const [caseId, items] of byCase) {
     const exp = items[0]?.expected ?? '';
