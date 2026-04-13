@@ -46,6 +46,7 @@ cdk.context.json
 eval-report-*.json
 eval-comparison-*.json
 eval-comparison-*.md
+eval-comparison-*.pdf
 
 # Drafts — not published with the demo repo
 writing/
