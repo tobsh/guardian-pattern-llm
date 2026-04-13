@@ -3,6 +3,7 @@
 ## 2026-04-13
 
 ### Features
+- add Bedrock retry/backoff and eval concurrency limit (d0fe0e8)
 - add no-guardrails baseline panel + 3-column comparison UI (c7d814e)
 - add three-way comparison harness (1dd8fa0)
 
