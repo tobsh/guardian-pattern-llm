@@ -17,6 +17,7 @@
 ### Chores
 - add dependabot config and security policy (93ff0a9)
 - apply prettier formatting + ignore lockfile/changelog (0a53995)
+- bulk update dependencies (298bb0f)
 - polish repo for open source (1cb9fd4)
 
 ## 2026-04-12

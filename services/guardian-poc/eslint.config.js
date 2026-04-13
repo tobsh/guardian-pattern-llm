@@ -17,6 +17,7 @@ export default tseslint.config(
       '*.config.js',
       'coverage/',
       '**/*.test.ts',
+      'src/eval/**',
     ],
   },
   eslint.configs.recommended,
@@ -137,6 +138,15 @@ export default tseslint.config(
       'no-restricted-syntax': 'off',
       'max-lines-per-function': 'off',
       'max-lines': 'off',
+      'max-depth': 'off',
+      complexity: 'off',
+      'sonarjs/cognitive-complexity': 'off',
+      'functional/no-let': 'off',
+      'functional/immutable-data': 'off',
+      'functional/no-loop-statements': 'off',
+      'functional/no-throw-statements': 'off',
+      'functional/prefer-readonly-type': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
     },
   }
 );

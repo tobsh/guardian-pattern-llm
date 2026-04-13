@@ -12,6 +12,7 @@
     "guardian:lint": "pnpm --filter @guardian-demo/guardian-poc lint",
     "guardian:typecheck": "pnpm --filter @guardian-demo/guardian-poc typecheck",
     "guardian:eval": "pnpm --filter @guardian-demo/guardian-poc eval",
+    "guardian:eval:compare": "pnpm --filter @guardian-demo/guardian-poc eval:compare",
     "guardrails:build": "pnpm --filter @guardian-demo/bedrock-guardrails-poc build",
     "guardrails:test": "pnpm --filter @guardian-demo/bedrock-guardrails-poc test",
     "guardrails:lint": "pnpm --filter @guardian-demo/bedrock-guardrails-poc lint",

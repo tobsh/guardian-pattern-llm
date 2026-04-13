@@ -565,9 +565,21 @@ pnpm guardrails:test        # Bedrock Guardrails tests
 pnpm noguardrails:test      # No-guardrails baseline tests
 pnpm chat:test              # Frontend tests
 
-# Guardian evaluation suite (calls Bedrock -- costs money)
+# Guardian-only evaluation suite (calls Bedrock -- costs money)
 pnpm guardian:eval
+
+# Three-way comparison eval — runs all 17 cases against ALL three
+# deployed Lambdas (no-guardrails, bedrock-guardrails, guardian) and
+# emits eval-comparison-<timestamp>.{json,md} with verdicts, latency,
+# and per-call USD cost. Requires the stacks to be deployed.
+COGNITO_USERNAME=you@example.com \
+COGNITO_PASSWORD='YourPassword!' \
+pnpm guardian:eval:compare
 ```
+
+The comparison eval auto-discovers `API_URL`, `COGNITO_USER_POOL_ID`, and
+`COGNITO_CLI_CLIENT_ID` from CloudFormation outputs — you only need the
+Cognito credentials. Total cost: ~$0.10 per full run (17 cases × 3 approaches).
 
 ---
 
