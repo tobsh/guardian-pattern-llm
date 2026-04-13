@@ -12,6 +12,7 @@
 - rewrite README for 3 panels, add constitution + CONTRIBUTING (41b58bb)
 
 ### Chores
+- apply prettier formatting + ignore lockfile/changelog (0a53995)
 - polish repo for open source (1cb9fd4)
 
 ## 2026-04-12
