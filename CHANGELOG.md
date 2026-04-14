@@ -6,6 +6,7 @@
 - bump @eslint/js from 9.39.4 to 10.0.1 (#38) (c4af6b5)
 - bump eslint-config-next in /services/chat-web (e8fcf4c)
 - bump the root group with 2 updates (#36) (36af100)
+- update pnpm-lock.yaml (c4b9f16)
 
 ## 2026-04-13
 
