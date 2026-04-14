@@ -3,6 +3,7 @@
 ## 2026-04-14
 
 ### CI
+- debug pnpm and lockfile state on lint job (e9a279e)
 - pin pnpm to 9.15.0 in action-setup@v6 (f729c5d)
 
 ### Chores
