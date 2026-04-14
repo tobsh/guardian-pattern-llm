@@ -35,6 +35,14 @@ jobs:
         with:
           node-version: '24'
           cache: 'pnpm'
+      - name: Debug pnpm and lockfile
+        run: |
+          which pnpm
+          pnpm --version
+          wc -l pnpm-lock.yaml
+          head -3 pnpm-lock.yaml
+          grep -c '^lockfileVersion' pnpm-lock.yaml || true
+          grep -n '^---' pnpm-lock.yaml || true
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Lint all packages
