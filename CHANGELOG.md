@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-14
+
+### Chores
+- bump @eslint/js from 9.39.4 to 10.0.1 (#38) (c4af6b5)
+- bump the actions group with 3 updates (f8678f7)
+- bump the root group with 2 updates (#36) (36af100)
+
 ## 2026-04-13
 
 ### Features
@@ -12,6 +19,7 @@
 - use outputAssessments plural + add tests (2be858c)
 
 ### Docs
+- add eval comparison PDF and reports/ index (c0d2d90)
 - rewrite README for 3 panels, add constitution + CONTRIBUTING (41b58bb)
 
 ### Style
