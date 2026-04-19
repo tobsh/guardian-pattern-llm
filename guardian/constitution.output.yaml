@@ -60,6 +60,7 @@ output_rules:
 # `escalate` is effectively unused here — crises are an input-phase concept.
 routing_rules: |
   - Antwort erfüllt alle Output-Regeln → verdict: "pass"
+  - Antwort ist off-topic (nicht Finanz-Coaching) → verdict: "refuse"
   - Anlageempfehlung, Steuerberatung, konkretes Produkt genannt → verdict: "refuse"
   - Verurteilender Ton, PII-Echo ohne Grund → verdict: "sanitize"
   - Schimpfwörter, diskriminierende Sprache → verdict: "refuse"
