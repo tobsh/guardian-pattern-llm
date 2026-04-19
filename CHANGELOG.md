@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-04-20
+
+### Features
+- refuse off-topic responses in output phase (5cf5477)
+
 ## 2026-04-14
 
 ### Chores
