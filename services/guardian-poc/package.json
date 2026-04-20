@@ -21,12 +21,12 @@
     "node": ">=24.0.0"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^2.32.0",
-    "@aws-sdk/client-bedrock-agentcore": "^3.1029.0",
-    "@aws-sdk/client-bedrock-runtime": "^3.1029.0",
-    "@aws-sdk/client-cloudformation": "^3.1029.0",
-    "@aws-sdk/client-cognito-identity-provider": "^3.1029.0",
-    "@aws-sdk/client-s3": "^3.1029.0",
+    "@aws-lambda-powertools/logger": "^2.33.0",
+    "@aws-sdk/client-bedrock-agentcore": "^3.1032.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1032.0",
+    "@aws-sdk/client-cloudformation": "^3.1032.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1032.0",
+    "@aws-sdk/client-s3": "^3.1032.0",
     "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
@@ -40,11 +40,11 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-functional": "^9.0.4",
     "eslint-plugin-security": "^4.0.0",
-    "eslint-plugin-sonarjs": "^4.0.2",
+    "eslint-plugin-sonarjs": "^4.0.3",
     "eslint-plugin-unicorn": "^64.0.0",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.0",
     "vitest": "^4.1.4"
   }
 }
