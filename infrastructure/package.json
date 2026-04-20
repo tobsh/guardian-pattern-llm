@@ -20,7 +20,7 @@
     "@types/source-map-support": "^0.5.10",
     "aws-cdk": "^2.1118.0",
     "esbuild": "^0.28.0",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.4"
   },
   "dependencies": {
