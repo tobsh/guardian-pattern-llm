@@ -5,6 +5,9 @@
 ### Features
 - refuse off-topic responses in output phase (5cf5477)
 
+### Tests
+- add 25 attack patterns (8952da0)
+
 ## 2026-04-14
 
 ### Chores
