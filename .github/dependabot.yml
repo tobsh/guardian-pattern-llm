@@ -18,6 +18,12 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    # chat-web is pinned to eslint 9 because eslint-config-next 16.x pulls a
+    # bundled babel-eslint-parser and eslint-plugin-react 7.x that both break
+    # under eslint 10. Revisit when the Next.js eslint ecosystem catches up.
+    ignore:
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
     groups:
       aws-cdk:
         patterns: ['aws-cdk*', 'cdk*', 'constructs']
