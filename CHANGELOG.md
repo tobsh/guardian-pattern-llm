@@ -2,11 +2,9 @@
 
 ## 2026-04-24
 
-### CI
-- consolidate npm updates to repo root (73ce41a)
-
 ### Chores
 - bump the root group with 16 updates (#51) (f5a6c46)
+- fix dependabot pnpm lockfile + bundle stalled bumps (#62) (44701bb)
 
 ## 2026-04-20
 
