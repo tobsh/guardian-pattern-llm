@@ -10,81 +10,35 @@ updates:
       actions:
         patterns: ['*']
 
-  # Root workspace (prettier, shared tooling)
+  # pnpm workspace — single entry at root so Dependabot updates the shared
+  # pnpm-lock.yaml. Per-workspace entries leave the root lockfile stale and
+  # break CI with ERR_PNPM_OUTDATED_LOCKFILE.
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
       day: monday
     groups:
-      root:
-        patterns: ['*']
-        update-types: [minor, patch]
-
-  - package-ecosystem: npm
-    directory: /infrastructure
-    schedule:
-      interval: weekly
-      day: monday
-    groups:
       aws-cdk:
         patterns: ['aws-cdk*', 'cdk*', 'constructs']
-      tooling:
-        patterns: ['*']
-        exclude-patterns: ['aws-cdk*', 'cdk*', 'constructs']
-        update-types: [minor, patch]
-
-  - package-ecosystem: npm
-    directory: /services/guardian-poc
-    schedule:
-      interval: weekly
-      day: monday
-    groups:
       aws-sdk:
         patterns: ['@aws-sdk/*', '@aws-lambda-powertools/*']
-      tooling:
-        patterns: ['*']
-        exclude-patterns: ['@aws-sdk/*', '@aws-lambda-powertools/*']
-        update-types: [minor, patch]
-
-  - package-ecosystem: npm
-    directory: /services/bedrock-guardrails-poc
-    schedule:
-      interval: weekly
-      day: monday
-    groups:
-      aws-sdk:
-        patterns: ['@aws-sdk/*', '@aws-lambda-powertools/*']
-      tooling:
-        patterns: ['*']
-        exclude-patterns: ['@aws-sdk/*', '@aws-lambda-powertools/*']
-        update-types: [minor, patch]
-
-  - package-ecosystem: npm
-    directory: /services/no-guardrails-poc
-    schedule:
-      interval: weekly
-      day: monday
-    groups:
-      aws-sdk:
-        patterns: ['@aws-sdk/*', '@aws-lambda-powertools/*']
-      tooling:
-        patterns: ['*']
-        exclude-patterns: ['@aws-sdk/*', '@aws-lambda-powertools/*']
-        update-types: [minor, patch]
-
-  - package-ecosystem: npm
-    directory: /services/chat-web
-    schedule:
-      interval: weekly
-      day: monday
-    groups:
-      next:
-        patterns: ['next', 'react', 'react-dom', '@types/react*']
       aws-amplify:
         patterns: ['aws-amplify', '@aws-amplify/*']
+      next:
+        patterns: ['next', 'react', 'react-dom', '@types/react*']
       tooling:
         patterns: ['*']
         exclude-patterns:
-          ['next', 'react', 'react-dom', '@types/react*', 'aws-amplify', '@aws-amplify/*']
+          - 'aws-cdk*'
+          - 'cdk*'
+          - 'constructs'
+          - '@aws-sdk/*'
+          - '@aws-lambda-powertools/*'
+          - 'aws-amplify'
+          - '@aws-amplify/*'
+          - 'next'
+          - 'react'
+          - 'react-dom'
+          - '@types/react*'
         update-types: [minor, patch]

@@ -1,9 +1,17 @@
 # Changelog
 
+## 2026-04-24
+
+### Chores
+- bump the root group with 16 updates (#51) (f5a6c46)
+
 ## 2026-04-20
 
 ### Features
 - refuse off-topic responses in output phase (5cf5477)
+
+### Style
+- apply prettier formatting to cases.ts (31e83e5)
 
 ### Tests
 - add 25 attack patterns (8952da0)
