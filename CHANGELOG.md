@@ -2,6 +2,9 @@
 
 ## 2026-04-24
 
+### CI
+- block eslint major bumps until Next ecosystem supports v10 (#64) (444d03d)
+
 ### Chores
 - bump the root group with 16 updates (#51) (f5a6c46)
 - fix dependabot pnpm lockfile + bundle stalled bumps (#62) (44701bb)
