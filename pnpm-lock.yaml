@@ -3936,8 +3936,8 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  uuid@11.1.0:
-    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   vite@8.0.8:
@@ -4140,7 +4140,7 @@ snapshots:
       graphql: 15.8.0
       rxjs: 7.8.2
       tslib: 2.8.1
-      uuid: 11.1.0
+      uuid: 11.1.1
 
   '@aws-amplify/api-rest@4.6.4(@aws-amplify/core@6.16.2)':
     dependencies:
@@ -4172,7 +4172,7 @@ snapshots:
       js-cookie: 3.0.5
       rxjs: 7.8.2
       tslib: 2.8.1
-      uuid: 11.1.0
+      uuid: 11.1.1
 
   '@aws-amplify/data-schema-types@1.2.1':
     dependencies:
@@ -8877,7 +8877,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  uuid@11.1.0: {}
+  uuid@11.1.1: {}
 
   vite@8.0.8(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3):
     dependencies:
