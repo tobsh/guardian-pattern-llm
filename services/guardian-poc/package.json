@@ -21,12 +21,12 @@
     "node": ">=24.0.0"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^2.33.0",
-    "@aws-sdk/client-bedrock-agentcore": "^3.1048.0",
-    "@aws-sdk/client-bedrock-runtime": "^3.1048.0",
-    "@aws-sdk/client-cloudformation": "^3.1048.0",
-    "@aws-sdk/client-cognito-identity-provider": "^3.1048.0",
-    "@aws-sdk/client-s3": "^3.1048.0",
+    "@aws-lambda-powertools/logger": "^2.33.1",
+    "@aws-sdk/client-bedrock-agentcore": "^3.1053.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1053.0",
+    "@aws-sdk/client-cloudformation": "^3.1053.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1053.0",
+    "@aws-sdk/client-s3": "^3.1053.0",
     "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
